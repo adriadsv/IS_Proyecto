@@ -1,0 +1,1406 @@
+PONTIFICIA UNIVERSIDAD CATÓLICA DEL ECUADOR 
+ 
+ 
+INGENIERÍA DE SOFTWARE 
+ 
+ 
+ 
+ 
+ 
+PLANIFICACIÓN, REQUERIMIENTOS Y DISEÑO 
+GRUPO 1 
+ 
+ 
+ 
+QUITO, ENERO 2026 
+ 
+
+
+PLANIFICACIÓN 
+Esta fase tiene como propósito principal organizar el trabajo del equipo de manera 
+efectiva para cumplir con los objetivos establecidos. Durante esta etapa, se realiza un 
+desglose detallado de las tareas, estimando el tamaño y el tiempo requerido para 
+completarlas, asignando responsabilidades específicas a cada miembro y asegurando una 
+carga de trabajo equilibrada. 
+Es crucial porque establece un plan claro que guía al equipo en cada ciclo de desarrollo. 
+ 
+TSPi Size Summary: Form SUMS 
+Plan ____  Assembly _____  Actual ______ 
+ 
+Name Adrián Sánchez Date 21/12/20265 
+Team 1 Instructor F. De la Cruz 
+Part/Level Planeación Cycle 1 
+ 
+Product or Part Names and/or 
+Numbers 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Component 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Size Measure 
+ 
+Base 
+ Deleted 
+ Modified 
+ 
+Added 
+ 
+Reused 
+ New and Changed 
+ Total 
+ 
+Total New Reuse 
+                   
+SRS                   
+  Diagramas UML        25    25  25   
+  Pàg. TXT        20    20  20   
+DIS                   
+  Diagramas UML        23    23  23   
+  Pag. TXT        21    21  21   
+IMP                   
+F1  LOC        460    460  460   
+F2  LOC        474    474  474   
+F3  LOC        484    484  484   
+F4  LOC        465    465  465   
+
+                   
+                   
+                   
+PRU                   
+  Pag. TXT                 
+                   
+PM                   
+  Pag. TXT                 
+                   
+                   
+                   
+Totals                   
+  Diagramas UML        48    48  48   
+  Pàg. TXT        41    41  41   
+  LOC        1883    1883  1883   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Diagrama de Actividades – F1 Gestión de Clientes  
+ 
+Diagrama de Actividades – F2 Gestión de Productos  
+  
+ 
+Diagrama de Actividades – F3 Gestión de Proveedores  
+  
+  
+ 
+ 
+ 
+
+
+Diagrama de Actividades – F4 Gestión de Compras 
+   
+ 
+REQUERIMIENTOS 
+Esta fase tiene como propósito identificar y documentar las necesidades del sistema, 
+asegurando que se comprendan correctamente los requerimientos del cliente. Durante esta 
+etapa, se realizan entrevistas, se especifican los requerimientos funcionales y no 
+funcionales, y se define el entorno en el que operará el sistema. Además, se establece un 
+plan de pruebas para validar el cumplimiento de los requerimientos. 
+Es crucial porque garantiza una base sólida para el desarrollo, minimizando riesgos y 
+asegurando que el producto final cumpla con las expectativas del usuario. 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+Requerimientos 
+Funcionales Casos 
+de uso  
+Casos de uso a 
+nivel general  
+Sistema de facturación de Chocolatería  
+ 
+ 
+Casos de uso siguiente nivel   
+F1 – Gestionar 
+Clientes Operaciones:  
+• F1.1: Crear Cliente  
+• F1.2: Modificar Cliente  
+• F1.3: Eliminar Cliente  
+• F1.4: Consultar Cliente  
+• F1.4.1: Consulta General o  F1.4.2: Consulta por 
+parámetro  
+
+
+  
+F2 – Gestionar 
+Productos Operaciones:  
+• F2.1: Crear Producto  
+• F2.2: Modificar Producto  
+• F2.3: Eliminar Producto  
+• F2.4: Consultar Producto  
+• F2.4.1: Consulta General o  F2.4.2: Consulta por 
+parámetro  
+ 
+
+
+F3 – Gestionar 
+Proveedores  Operaciones:  
+• F3.1: Crear Proveedor  
+• F3.2: Modificar Proveedor  
+• F3.3: Eliminar Proveedor  
+• F3.4: Consultar Proveedor  
+• F3.4.1: Consulta General o F3.4.2: Consulta por parámetro 
+ 
+F4 – Gestionar Compras Operaciones:  
+• F4.1: Crear Compras 
+• F4.2: Modificar Compras 
+• F4.3: Eliminar Compras 
+• F4.4: Consultar Compras   
+• F4.4.1: Consulta General o  F4.4.2: Consulta por 
+parametro 
+
+
+  
+Casos de uso a detalle   
+F1 Gestionar Clientes   
+F1.1 Crear Cliente  
+  
+Descripción  
+Este caso de uso permite al administrador ingresar los datos de un nuevo 
+cliente en el sistema. El sistema valida que la información sea correcta y 
+que el cliente no exista previamente, para luego almacenarlo y dejarlo 
+disponible para los procesos de facturación.  
+• Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Crear Cliente  desde el módulo de 
+Gestión de Clientes. 
+
+
+2. El sistema despliega el formulario de registro con los campos: identificación, 
+nombres, apellidos, dirección, teléfono y correo electrónico. 
+3. El administrador ingresa la información del cliente y confirma la operación. 
+4. El sistema verifica que todos los campos obligatorios estén completos y que 
+el número de identificación no exista previamente en la base de datos. 
+5. El sistema almacena la información del cliente en la base de datos del sistema 
+de facturación. 
+6. El sistema muestra un mensaje de confirmación indicando que el cliente fue 
+registrado correctamente. 
+Flujos alternos:  
+A1: Datos no válidos → el sistema muestra mensaje y solicita corrección.  
+A2: Cliente duplicado (identificación/correo) → el sistema notifica y no 
+registra.  
+ 
+F1.2 Modificar Cliente  
+  
+Descripción  
+Este caso de uso permite al administrador modificar los datos de un 
+cliente existente, garantizando que la información se mantenga 
+actualizada y refleje correctamente los cambios realizados. •   
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un cliente registrado desde la lista de clientes 
+del sistema. 
+2. El administrador selecciona la opción Modificar Cliente. 
+3. El sistema carga y muestra los datos actuales del cliente en el formulario 
+de edición. 
+4. El administrador actualiza uno o más campos del cliente. 
+
+
+5. El sistema valida que los datos modificados cumplan con las reglas 
+definidas y que no exista duplicidad de identificación. 
+6. El sistema guarda los cambios en la base de datos del sistema de 
+facturación. 
+7. El sistema muestra un mensaje de confirmación indicando que el cliente 
+fue actualizado correctamente. 
+Flujos alternos:  
+A2: Cliente no encontrado → sistema informa y regresa al listado.  
+F1.3 Eliminar Cliente  
+  
+Descripción  
+Este caso de uso permite al administrador retirar un cliente del sistema, 
+evitando que siga siendo utilizado en los procesos de facturación, 
+manteniendo la base de datos organizada.  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un cliente registrado desde la lista de clientes del 
+sistema. 
+2. El administrador selecciona la opción Eliminar Cliente. 
+3. El sistema muestra un mensaje de confirmación solicitando autorización para 
+eliminar el cliente seleccionado. 
+4. El administrador confirma la eliminación del cliente. 
+5. El sistema elimina o marca como inactivo el registro del cliente en la base de 
+datos del sistema de facturación, según la política definida. 
+6. El sistema muestra un mensaje de confirmación indicando que la operación se 
+realizó correctamente. 
+Flujos alternos:  
+1. A1: Cancelar confirmación → no se realizan cambios.  
+
+
+2. A2: Cliente con registros asociados → el sistema 
+bloquea eliminación y notifica al administrador. 
+F1.4.1 Consulta General   
+  
+Descripción  
+Este caso de uso permite al administrador consultar de manera general 
+todos los clientes existentes, facilitando la revisión y control de la 
+información almacenada.  
+• Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta General dentro del módulo 
+Consultar Cliente. 
+2. El sistema recupera todos los clientes registrados desde la base de datos del 
+sistema de facturación. 
+3. El sistema muestra en pantalla el listado completo de clientes con su 
+información principal. 
+F1.4.2 Consulta por Parámetro 
+  
+Descripción  
+Este caso de uso permite al administrador filtrar clientes utilizando 
+parámetros como nombre, identificación o correo, mostrando únicamente 
+los registros que coincidan con la búsqueda.  
+• Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta por Parámetro dentro del 
+módulo Consultar Cliente. 
+
+
+2. El sistema muestra los campos disponibles para filtrar la búsqueda 
+(identificación, nombre, correo u otros criterios definidos). 
+3. El administrador ingresa uno o más parámetros de búsqueda y confirma la 
+consulta. 
+4. El sistema valida los parámetros ingresados. 
+5. El sistema consulta la base de datos utilizando los parámetros definidos. 
+6. El sistema muestra en pantalla los clientes que cumplen con los criterios de 
+búsqueda. 
+Flujos alternos:  
+A1: Sin coincidencias → muestra “0 resultados”.  
+F2 — Gestionar Productos (a detalle)  
+F2.1 Crear Producto  
+  
+  
+Descripción  
+Este caso de uso permite al administrador ingresar la información de un 
+producto, validando los datos y almacenándolos correctamente para que 
+el producto esté disponible en el sistema de facturación. •  Actor: 
+Administrador  
+Flujo principal:  
+1. El administrador accede al módulo Gestión de Productos y 
+selecciona la opción Crear Producto. 
+2. El sistema muestra el formulario de registro con los campos: 
+código, nombre, descripción, precio, categoría y stock inicial. 
+3. El administrador ingresa la información del producto y confirma 
+la operación. 
+4. El sistema valida que los campos obligatorios estén completos y 
+que el código del producto no exista previamente en la base de 
+datos. 
+
+
+5. El sistema registra el producto en la base de datos del sistema de 
+facturación. 
+6. El sistema muestra un mensaje de confirmación indicando que el 
+producto fue creado correctamente. 
+Flujos alternos:  
+1. A1: Datos no válidos → el sistema muestra mensaje y 
+solicita corrección.  
+2. A2: Producto duplicado (código/nombre) → el 
+sistema notifica y no registra.  
+F2.2 Modificar Producto  
+  
+Descripción  
+Este caso de uso permite al administrador modificar datos como nombre, 
+precio o descripción de un producto, asegurando que la información 
+refleje el estado actual del mismo.  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un producto registrado desde la lista de productos 
+del sistema. 
+2. El administrador selecciona la opción Modificar Producto. 
+3. El sistema carga y muestra los datos actuales del producto en el formulario de 
+edición. 
+4. El administrador actualiza uno o más campos del producto (precio, descripción, 
+categoría o stock). 
+5. El sistema valida que los datos modificados cumplan con las reglas definidas. 
+6. El sistema guarda los cambios del producto en la base de datos del sistema de 
+facturación. 
+7. El sistema muestra un mensaje de confirmación indicando que el producto fue 
+actualizado correctamente. 
+
+
+Flujos alternos:  
+A1: Datos no válidos → mensaje y no guarda.  
+A2: Producto no encontrado → sistema informa y regresa al listado.  
+F2.3 Eliminar Producto  
+  
+Descripción  
+Este caso de uso permite retirar productos del sistema, evitando que 
+sean utilizados en nuevas facturas y manteniendo el control de los 
+artículos disponibles. •  Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un producto registrado desde la lista de productos 
+del sistema. 
+2. El administrador selecciona la opción Eliminar Producto. 
+3. El sistema muestra un mensaje de confirmación solicitando autorización para 
+eliminar el producto seleccionado. 
+4. El administrador confirma la eliminación del producto. 
+5. El sistema elimina o marca como inactivo el producto en la base de datos del 
+sistema de facturación, según la política definida. 
+6. El sistema muestra un mensaje de confirmación indicando que la operación se 
+realizó correctamente. 
+Flujos alternos:  
+A1: Cancelar confirmación → no se realizan cambios.  
+A2: Producto con stock/movimientos asociados → el 
+sistema bloquea eliminación y sugiere inactivación.  
+F2.4.1 Consulta General   
+
+
+  
+Descripción  
+Este caso de uso permite consultar el listado general de productos, 
+facilitando el control y revisión de los artículos disponibles.  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta General dentro del módulo 
+Consultar Producto. 
+2. El sistema recupera todos los productos registrados desde la base de datos del 
+sistema de facturación. 
+3. El sistema muestra en pantalla el listado completo de productos con su 
+información principal (código, nombre, precio y stock). 
+F2.4.2 Consulta por Parámetro 
+  
+Descripción  
+Este caso de uso permite al administrador filtrar productos por diferentes parámetros, 
+mostrando únicamente aquellos que coincidan con los criterios ingresados. •  Actor: 
+Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta por 
+Parámetro dentro del módulo Consultar Producto. 
+2. El sistema muestra los campos disponibles para filtrar la 
+búsqueda (código, nombre, categoría u otros criterios 
+definidos). 
+3. El administrador ingresa uno o más parámetros de búsqueda y 
+confirma la consulta. 
+
+
+4. El sistema valida los parámetros ingresados. 
+5. El sistema consulta la base de datos utilizando los parámetros 
+definidos. 
+6. El sistema muestra en pantalla los productos que cumplen con 
+los criterios de búsqueda. 
+Flujos alternos:  
+A1: Sin coincidencias → muestra “0 resultados”.  
+  
+F3 — Gestionar Proveedores   
+F3.1 Crear Proveedor  
+  
+Descripción  
+Este caso de uso permite ingresar y almacenar la información de un 
+proveedor, asegurando que los datos queden disponibles para los 
+procesos de compra y control administrativo.  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador accede al módulo Gestión de Proveedores y selecciona la 
+opción Crear Proveedor. 
+2. El sistema muestra el formulario de registro con los campos: 
+identificación/RUC, razón social, nombre comercial, dirección, teléfono y 
+correo electrónico. 
+3. El administrador ingresa la información del proveedor y confirma la 
+operación. 
+4. El sistema valida que los campos obligatorios estén completos y que la 
+identificación/RUC no exista previamente en la base de datos. 
+5. El sistema registra el proveedor en la base de datos del sistema de 
+facturación. 
+6. El sistema muestra un mensaje de confirmación indicando que el proveedor 
+fue creado correctamente. 
+Flujos alternos:  
+A1: Datos no válidos → el sistema muestra mensaje y solicita corrección.  
+
+
+A2: Proveedor duplicado (RUC/correo) → el sistema notifica y no 
+registra.  
+F3.2 Modificar Proveedor  
+  
+Descripción  
+Este caso de uso permite al administrador modificar los datos del 
+proveedor, garantizando que la información se mantenga correcta y 
+actualizada. •  Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un proveedor registrado desde la lista de 
+proveedores del sistema. 
+2. El administrador selecciona la opción Modificar Proveedor. 
+3. El sistema carga y muestra los datos actuales del proveedor en el formulario 
+de edición. 
+4. El administrador actualiza uno o más campos del proveedor (razón social, 
+dirección, teléfono, correo u otros datos permitidos). 
+5. El sistema valida que los datos modificados cumplan con las reglas definidas 
+y que no generen duplicidad de identificación/RUC. 
+6. El sistema guarda los cambios del proveedor en la base de datos del sistema 
+de facturación. 
+7. El sistema muestra un mensaje de confirmación indicando que el proveedor 
+fue actualizado correctamente. 
+Flujos alternos:  
+A1: Datos no válidos → mensaje y no guarda.  
+A2: Proveedor no encontrado → sistema informa y regresa al listado. 
+F3.3 Eliminar Proveedor  
+  
+Descripción  
+Este caso de uso permite retirar proveedores que ya no mantienen 
+relación comercial, manteniendo organizada la información del sistema.  
+
+
+  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona un proveedor registrado desde la lista de 
+proveedores del sistema. 
+2. El administrador selecciona la opción Eliminar Proveedor. 
+3. El sistema muestra un mensaje de confirmación solicitando autorización para 
+eliminar el proveedor seleccionado. 
+4. El administrador confirma la eliminación del proveedor. 
+5. El sistema elimina o marca como inactivo el proveedor en la base de datos 
+del sistema de facturación, según la política definida. 
+6. El sistema muestra un mensaje de confirmación indicando que la operación 
+se realizó correctamente. 
+Flujos alternos:  
+A1: Cancelar confirmación → no se realizan cambios.  
+A2: Proveedor con compras/facturas asociadas → el 
+sistema bloquea eliminación y sugiere inactivación.  
+F3.4.1 Consulta General   
+  
+Descripción  
+Este caso de uso permite consultar el listado completo de proveedores 
+existentes en el sistema.  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta General dentro del módulo 
+Consultar Proveedor. 
+2. El sistema recupera todos los proveedores registrados desde la base de datos 
+del sistema de facturación. 
+
+
+3. El sistema muestra en pantalla el listado completo de proveedores con su 
+información principal (identificación/RUC, razón social y contacto). 
+F3.4.2 Consulta por Parámetro 
+  
+  
+Descripción  
+Este caso de uso permite filtrar proveedores según parámetros como 
+nombre, RUC o estado, mostrando únicamente los resultados 
+coincidentes.  
+  
+Actor: Administrador  
+Flujo principal:  
+1. El administrador selecciona la opción Consulta por Parámetro dentro del 
+módulo Consultar Proveedor. 
+2. El sistema muestra los campos disponibles para filtrar la búsqueda 
+(identificación/RUC, razón social, nombre comercial u otros criterios 
+definidos). 
+3. El administrador ingresa uno o más parámetros de búsqueda y confirma la 
+consulta. 
+4. El sistema valida los parámetros ingresados. 
+5. El sistema consulta la base de datos utilizando los parámetros definidos. 
+6. El sistema muestra en pantalla los proveedores que cumplen con los criterios 
+de búsqueda. 
+Flujos alternos:  
+A1: Sin coincidencias → muestra “0 resultados”. 
+F4 — Gestión de Compras 
+F4.1 Registrar Compra 
+
+
+  
+Descripción 
+Este caso de uso permite al administrador registrar una compra en el sistema, 
+asociándola a un proveedor y a los productos adquiridos, con el fin de actualizar el 
+inventario y mantener un control adecuado de las operaciones de compra. 
+Actor 
+Administrador 
+Flujo principal 
+1. El administrador accede al módulo Gestión de Compras y selecciona la opción 
+Registrar Compra. 
+2. El sistema muestra el formulario de regi stro de compra con los campos: 
+proveedor, fecha de compra, número de comprobante, tipo de comprobante y 
+detalle de productos. 
+3. El administrador selecciona un proveedor registrado en el sistema. 
+4. El administrador agrega uno o más productos a la compra, ingresando la cantidad 
+y el costo unitario de cada producto. 
+5. El sistema calcula automáticamente el subtotal, impuestos y total de la compra. 
+6. El administrador confirma el registro de la compra. 
+7. El sistema valida que el número de comprobante no esté duplicado y que los datos 
+ingresados sean correctos. 
+8. El sistema registra la compra en la base de datos del sistema de facturación. 
+9. El sistema actualiza automáticamente el stock de los productos adquiridos en la 
+bodega. 
+10. El sistema muestra un mensaje de confirmación indic ando que la compra fue 
+registrada correctamente. 
+Flujos alternos 
+A1. Datos no válidos 
+El sistema muestra un mensaje indicando los campos incorrectos o incompletos y 
+solicita al administrador corregir la información ingresada. 
+A2. Comprobante duplicado 
+El sistema notifica que el número de comprobante ya existe y no permite registrar la 
+compra. 
+
+
+F4.2 Modificar Compra 
+  
+Descripción 
+Este caso de uso permite al administrador actualizar la información de una compra 
+registrada en el sistema (datos del comprobante y/o detalle de productos), 
+manteniendo la consistencia de los registros y del inventario. 
+Actor 
+Administrador 
+Flujo principal 
+1. El administrador accede al módulo Gestión de Compras y visualiza el listado 
+de compras registradas. 
+2. El administrador selecciona una compra existente y selecciona la opción 
+Modificar Compra. 
+3. El sistema muestra el formulario con los datos actuales de la compra (proveedor, 
+fecha, comprobante y detalle de productos). 
+4. El administrador edita uno o más campos permitidos de la compra y/o modifica 
+el detalle de productos (agregar, quitar o actualizar cantidades/costo unitario). 
+5. El sistema recalcula automáticamente el subtotal, impuestos y total de la compra 
+según los cambios realizados. 
+6. El administrador confirma la actualización de la compra. 
+7. El sistema valida que los datos ingresados sean correctos y que el número de 
+comprobante no genere duplicidad (si fue modificado). 
+8. El sistema guarda los cambios de la compra en la base de datos del sistema de 
+facturación. 
+9. El sistema actualiza el stock de los productos en bodega según las diferencias 
+entre el detalle anterior y el nuevo detalle. 
+10. El sistema muestra un mensaje de confirmación indicando que la compra fue 
+actualizada correctamente. 
+Flujos alternos 
+
+
+A1. Datos no válidos 
+El sistema muestra un mensaje indicando los campos incorrectos o incompletos y 
+solicita corrección. 
+F4.3 Eliminar Compra
+  
+Descripción 
+Este caso de uso permite al administrador eliminar o anular una compra registrada en 
+el sistema, asegurando la correcta actualización de los registros y del inventario. 
+Actor 
+Administrador 
+Flujo principal 
+1. El administrador accede al módulo Gestión de Compras y visualiza el listado de 
+compras registradas. 
+2. El administrador selecciona una compra existente y selecciona la opción 
+Eliminar Compra. 
+3. El sistema muestra un mensaje de confirmación solicitando autorización para 
+eliminar o anular la compra seleccionada. 
+4. El administrador confirma la eliminación de la compra. 
+5. El sistema elimina o marca como anulada la compra en la base de datos del 
+sistema de facturación. 
+6. El sistema actualiza el stock de los productos en bodega, revirtiendo las 
+cantidades asociadas a la compra eliminada. 
+7. El sistema muestra un mensaje de confirmación indicando que la compra fue 
+eliminada correctamente. 
+Flujos alternos: 
+A1. Cancelación de la operación 
+El administrador cancela la operación y el sistema no realiza ningún cambio. 
+A2. Compra no encontrada 
+El sistema notifica que la compra seleccionada no existe o no es válida. 
+F4.4.1 Consulta General   
+
+
+  
+Descripción 
+Este caso de uso permite al administrador visualizar todas las compras registradas en el 
+sistema, mostrando la información principal de cada operación. 
+Actor 
+Administrador 
+Flujo principal 
+1. El administrador selecciona la opción Consulta General dentro del módulo 
+Consultar Compra. 
+2. El sistema recupera todas las compras registradas desde la base de datos del 
+sistema de facturación. 
+3. El sistema muestra en pantalla el listado completo de compras con su información 
+principal (proveedor, fecha, número de comprobante y total). 
+F4.4.2 Consulta por Parámetro 
+  
+Descripción 
+Este caso de uso permite al administrador consultar compras específicas mediante 
+criterios de búsqueda definidos, facilitando la localización rápida de información. 
+Actor 
+Administrador 
+Flujo principal 
+1. El administrador selecciona la opción Consulta por Parámetro dentro del 
+módulo Consultar Compra. 
+2. El sistema muestra los campos disponibles para filtrar la búsqueda (proveedor, 
+rango de fechas, número de comprobante, tipo de comprobante u otros criterios 
+definidos). 
+
+
+3. El administrador ingresa uno o más parámetros de búsqueda y confirma la 
+consulta. 
+4. El sistema valida los parámetros ingresados. 
+5. El sistema consulta la base de datos utilizando los criterios definidos. 
+6. El sistema muestra en pantalla las compras que cumplen con los parámetros de 
+búsqueda. 
+Flujos alternos 
+A1. Parámetros no válidos 
+El sistema muestra un mensaje indicando que los parámetros ingresados no son 
+válidos y solicita corregirlos. 
+ 
+ 
+ 
+Requerimientos No Funcionales 
+Autor: SommerVille-Kotonya 
+ 
+Categoría Requerimiento 
+R. USABILIDAD: 
+ 
+  La interfaz debe ser intuitiva, permitiendo a 
+usuarios realizar una compra en máximo 5 clics  
+  El catálogo de chocolates debe mostrarse con 
+imágenes de alta calidad y descripciones claras  
+
+
+Categoría Requerimiento 
+  El proceso de checkout debe ser simple y guiado 
+paso a paso  
+  Sistema de búsqueda y filtros (por tipo de 
+chocolate, precio, ocasión, ingredientes)  
+  Versión responsive.  
+ 
+R. RENDIMIENTO: 
+ 
+ 
+  Tiempo de carga de página principal: máximo 5 
+segundos  
+  Tiempo de respuesta en búsquedas: máximo 3 
+segundos  
+  Capacidad de soportar 50 usuarios concurrentes 
+durante promociones  
+  Imágenes de productos optimizadas (tamaño 
+máximo 200KB)  
+  Base de datos debe responder consultas en menos 
+de 1 segundo  
+ 
+R. SEGURIDAD: 
+   Conexión segura HTTPS en todo el sitio  
+  Contraseñas encriptadas en la base de datos  
+  Protección básica contra hackers (SQL Injection y 
+XSS)  
+  Backup de base de datos cada 24 horas  
+  Solo usuarios autenticados pueden realizar 
+compras 
+ 
+Estándares de mensajería:  
+1. Se crean:  
+• Tiempo de respuesta máximo: 2 segundos  
+• El mensaje debe almacenarse correctamente en la base de datos 
+• Confirmación visual al usuario de la creación exitosa  
+• Validación de formato y campos obligatorios antes de crear  
+
+ 
+2. Se modifican:  
+• Tiempo de actualización: menos de 2 segundos  
+• Validación de datos modificados  
+• Confirmación de modificación exitosa  
+• Actualización en tiempo real en la interfaz  
+• Mantener integridad referencial en la BD  
+ 
+3. Se eliminan:  
+• Confirmación antes de eliminar  
+• Eliminación permanente de la base de datos  
+• Tiempo de ejecución: menos de 1 segundo  
+• Actualización inmediata en la interfaz  
+ 
+ 
+ 
+      4.Se buscan: 
+• Resultados en menos de 3 segundos  
+• Búsqueda por texto, fecha, remitente  
+• Ordenamiento cronológico  
+• Resaltado de términos de búsqueda 
+ 
+Planes de Pruebas 
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+1 Crear 
+Cliente 
+Válidos 
+ 
+Cliente almacenado 
+en BD 
+F1.1  
+No Válidos 
+ 
+Mensaje de Error 
+ 
+Duplicados Sistema notifica y no 
+registra 
+2 Consultar 
+Clientes 
+(General) 
+Sin 
+parámetros 
+Lista completa de 
+clientes 
+F1.4.1  
+3 Parámetros 
+válidos 
+Cliente recuperado F1.4.2  
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+Consultar 
+Cliente 
+(Específico) 
+Parámetros 
+no válidos 
+Mensaje "0 
+resultados" 
+4 Modificar 
+Cliente 
+Modificación 
+válida 
+Información 
+actualizada 
+F1.2  
+Modificación 
+no válida 
+ 
+Mensaje de Error 
+ 
+Cliente no 
+encontrado 
+Sistema informa error 
+5 Eliminar 
+Cliente 
+Datos válidos 
+ 
+ 
+ 
+Cliente 
+eliminado/inactivado 
+ 
+ 
+ 
+F1.3  
+Cancelar 
+confirmación 
+ 
+No se realizan 
+cambios 
+ 
+Cliente con 
+registros 
+Sistema bloquea 
+eliminación 
+6 Consultar 
+Cliente 
+después de 
+modificar 
+Parámetros 
+válidos 
+Información 
+modificada visible 
+F1.4.2  
+ 
+ 
+ 
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+1 Crear 
+Producto 
+Válidos Producto almacenado 
+en BD 
+F2.1  
+No Válidos 
+ 
+Mensaje de Error 
+ 
+ 
+Duplicados Sistema notifica y no 
+registra 
+ 
+2 Consultar 
+Productos 
+(General) 
+Sin 
+parámetros 
+Lista completa de 
+productos 
+F2.4.1  
+3 Consultar 
+Producto 
+(Específico) 
+Parámetros 
+válidos 
+Producto recuperado 
+ 
+ 
+F2.4.2  
+Parámetros 
+no válidos 
+Mensaje "0 
+resultados" 
+ 
+4 Modificar 
+Producto 
+Modificación 
+válida 
+Información 
+actualizada 
+F2.2  
+Modificación 
+no válida 
+ 
+Mensaje de Error 
+ 
+ 
+Producto no 
+encontrado 
+Sistema informa error  
+5 Eliminar 
+Producto 
+Datos válidos Producto 
+eliminado/inactivado 
+F2.3  
+ 
+Cancelar 
+confirmación 
+ 
+No se realizan 
+cambios 
+ 
+ 
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+Producto con 
+stock 
+Sistema bloquea 
+eliminación 
+ 
+6 Consultar 
+Producto 
+después de 
+modificar 
+Parámetros 
+válidos 
+Información 
+modificada visible 
+F2.4.2  
+ 
+ 
+ 
+ 
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+1 Crear 
+Proveedor 
+Válidos Proveedor 
+almacenado en BD 
+F3.1  
+No Válidos 
+ 
+Mensaje de Error 
+ 
+ 
+Duplicados Sistema notifica y no 
+registra 
+ 
+2 Consultar 
+Proveedores 
+(General) 
+Sin 
+parámetros 
+Lista completa de 
+proveedores 
+F3.4.1  
+3 Consultar 
+Proveedor 
+(Específico) 
+Parámetros 
+válidos 
+ 
+ 
+Proveedor recuperado 
+ 
+ 
+F3.4.2  
+Parámetros 
+no válidos 
+Mensaje "0 
+resultados" 
+ 
+4 Modificar 
+Proveedor 
+Modificación 
+válida 
+Información 
+actualizada 
+F3.2  
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+ 
+Modificación 
+no válida 
+ 
+Mensaje de Error 
+ 
+ 
+Proveedor no 
+encontrado 
+Sistema informa error  
+5 Eliminar 
+Proveedor 
+Datos válidos Proveedor 
+eliminado/inactivado 
+F3.3  
+Cancelar 
+confirmación 
+ 
+No se realizan 
+cambios 
+ 
+ 
+Proveedor 
+con facturas 
+Sistema bloquea 
+eliminación 
+ 
+6 Consultar 
+Proveedor 
+después de 
+modificar 
+Parámetros 
+válidos 
+Información 
+modificada visible 
+F3.4.2  
+ 
+ 
+ 
+ 
+ 
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+1 Crear 
+Bodega 
+Válidos Bodega almacenada 
+en BD 
+F4.1  
+No Válidos Mensaje de Error  
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+  
+Duplicados Sistema notifica y no 
+registra 
+ 
+2 Consultar 
+Bodegas 
+(General) 
+Sin 
+parámetros 
+Lista completa de 
+bodegas 
+F4.4.1  
+3 Consultar 
+Bodega 
+(Específica) 
+Parámetros 
+válidos 
+ 
+ 
+Bodega recuperada 
+ 
+ 
+F4.4.2  
+Parámetros 
+no válidos 
+Mensaje "0 
+resultados" 
+ 
+4 Modificar 
+Bodega 
+Modificación 
+válida 
+Información 
+actualizada 
+F4.2  
+Modificación 
+no válida 
+ 
+Mensaje de Error 
+ 
+ 
+Bodega no 
+encontrada 
+Sistema informa error  
+5 Eliminar 
+Bodega 
+Datos válidos 
+ 
+Bodega 
+eliminada/inactivada 
+F4.3  
+Cancelar 
+confirmación 
+ 
+No se realizan 
+cambios 
+ 
+ 
+Bodega con 
+stock 
+Sistema bloquea 
+eliminación 
+ 
+
+Pasos Acción Datos Resultados Esperados Funcionalidad Estado 
+6 Consultar 
+Bodega 
+después de 
+modificar 
+Parámetros 
+válidos 
+Información 
+modificada visible 
+F4.4.2  
+ 
+DISEÑO 
+Esta fase tiene como propósito definir cómo se construirá el sistema, estableciendo su 
+arquitectura y especificando la interacción entre sus componentes. Durante esta etapa, se 
+elabora un diseño de alto nivel, se crean prototipos de interfaces, se fijan estánda res de 
+desarrollo y se planifica la integración del sistema. 
+Es crucial porque proporciona una estructura clara para la implementación, facilitando la 
+organización del código, reduciendo errores y asegurando la coherencia del desarrollo. 
+ 
+Arquitectura de 3 Capas 
+La arquitectura de 3 capas es un modelo ampliamente utilizado en el desarrollo de 
+aplicaciones para separar las responsabilidades del sistema en tres niveles principales. 
+Esto mejora la organización, el mantenimiento y la escalabilidad del software. 
+GUI: Interfaz Gráfica de Usuario 
+• Es la capa más cercana al usuario. 
+• Responsable de la interacción con el usuario final, capturando entradas y 
+mostrando salidas. 
+• Consiste en ventanas, botones, formularios, y otros elementos gráficos. 
+• Comunica las solicitudes del usuario a la capa DP y muestra los resultados 
+procesados. 
+DP: Dominio del Problema  
+• Contiene la lógica del negocio y las reglas para procesar los datos. 
+• Define cómo los datos se transforman o procesan según los requerimientos del 
+negocio. 
+• Actúa como un intermediario entre la GUI y la MD, asegurándose de que las 
+operaciones cumplan con las reglas definidas. 
+MD: Manejo de Datos 
+• Responsable de todas las operaciones relacionadas con la base de datos. 
+
+• Contiene las consultas SQL para crear, leer, actualizar y eliminar datos (CRUD). 
+• Está directamente vinculada a las tablas y registros de la base de datos 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Diagrama de Clases 
+F1 Gestión de Clientes 
+ 
+
+
+F2 Gestión de Productos 
+ 
+F3 Gestión de Proveedores 
+ 
+F4 Gestión de Bodega 
+
+
+ 
+ 
+Diagrama Entidad/Relación 
+ 
+ 
+
+
+Diagramas de Secuencia  
+F1 Gestionar Clientes   
+F1.1 Crear Cliente  
+  
+F1.2 Modificar Cliente  
+ 
+
+
+F1.3 Eliminar Cliente  
+ 
+F1.4.1 Consulta General   
+ 
+
+
+F1.4.2 Consulta por Parámetro 
+ 
+F2. Gestión de Productos  
+F2.1 Crear Producto   
+ 
+
+
+F2.2 Modificar Producto 
+ 
+ 
+F2.3 Eliminar Producto  
+ 
+ 
+ 
+ 
+
+
+F2.4.1 Consulta General   
+ 
+ 
+F2.4.2 Consulta por Parámetro 
+ 
+ 
+
+
+F3. Gestión de Proveedores  
+F3.1 Crear Proveedor  
+ 
+F3.2 Modificar Proveedor  
+ 
+
+
+F3.3 Eliminar Proveedor  
+ 
+F3.4.1 Consulta General   
+ 
+ 
+ 
+
+
+F3.4.2 Consulta por Parámetro 
+  
+F4. Gestión de Bodega   
+F4.1 Registrar Compra 
+ 
+
+
+ 
+F4.2 Modificar Compra 
+ 
+F4.3 Eliminar Compra  
+ 
+
+
+F4.4.1 Consulta General   
+ 
+F4.4.2 Consulta por Parámetro 
+ 
+
+
+INTEGRACIÓN POR DEPENDENCIA DE CLASES 
+ 
+Clase Principal Depende de Prueba de Integración 
+ClienteController ClienteService Verificar que las operaciones 
+CRUD del controlador llaman 
+correctamente a los métodos 
+del servicio 
+ClienteService ClienteRepository Validar que los datos se 
+persisten correctamente en BD 
+sin pérdida de información 
+ProductoController ProductoService Confirmar que las 
+validaciones del controlador se 
+ejecutan antes de invocar al 
+servicio 
+ProductoService ProductoRepository, 
+BodegaService 
+Verificar que al 
+crear/modificar productos se 
+actualiza correctamente el 
+inventario en bodega 
+FacturaController FacturaService, 
+ClienteService 
+Validar que la factura integra 
+correctamente datos de cliente, 
+productos y totales 
+FacturaService VentaService, 
+InventarioService 
+Confirmar que al generar 
+factura se registra venta y se 
+descuenta stock 
+automáticamente 
+BodegaController BodegaService Verificar que las operaciones 
+de bodega manejan 
+correctamente las 
+transacciones 
+BodegaService BodegaRepository, 
+ProductoService 
+Validar que el stock se 
+actualiza en tiempo real 
+cuando hay movimientos 
+
+Clase Principal Depende de Prueba de Integración 
+ProveedorController ProveedorService Confirmar que las 
+validaciones de RUC y datos 
+se ejecutan correctamente 
+ProveedorService ProveedorRepository Verificar que al registrar 
+proveedor se habilita para 
+proceso de compras 
+AutenticacionController UsuarioService, 
+SesionService 
+Validar que el login integra 
+correctamente validación de 
+credenciales y creación de 
+sesión 
+ReporteService VentaRepository, 
+FacturaRepository 
+Confirmar que los reportes 
+consolidan datos 
+correctamente de múltiples 
+fuentes 
+ 
+Fase 1: Componentes Base 
+1. Repository → Service (validar persistencia de datos) 
+2. Service → Service (validar lógica de negocio entre servicios) 
+Fase 2: Controladores y Servicios 
+3. Controller → Service (validar capa de presentación) 
+4. Service → Multiple Services (validar orquestación de servicios) 
+Fase 3: Flujos Completos 
+5. Ejecutar integración completos (end-to-end) 
+6. Validar transacciones completas con todas las capas integradas 
+CASOS DE PRUEBA DE INTEGRACIÓN 
+ 
+Caso 1: Integración ProductoService + BodegaService 
+Objetivo: Verificar que al crear un producto, se registra correctamente en bodega 
+Precondición: Bodega configurada en sistema 
+Pasos: 
+7. Crear producto nuevo con stock inicial de 100 unidades 
+8. Verificar que ProductoService llama a BodegaService.registrarStock() 
+9. Consultar stock en BodegaRepository 
+
+Resultado esperado: Stock de 100 unidades registrado en bodega principal 
+Caso 2: Integración FacturaService + VentaService + InventarioService 
+Objetivo: Verificar flujo completo de facturación con actualización de inventario 
+Precondición: Cliente, producto y stock disponibles 
+Pasos: 
+10. Generar factura para cliente con 5 chocolates 
+11. Verificar que FacturaService llama a VentaService.registrar() 
+12. Verificar que InventarioService.descontarStock() se ejecuta 
+13. Consultar stock actualizado en bodega 
+Resultado esperado: Factura creada, venta registrada, stock descontado en 5 unidades 
+Caso 3: Integración ClienteController + ClienteService + ClienteRepository 
+Objetivo: Validar el flujo completo de creación de cliente 
+Precondición: Sistema iniciado 
+Pasos: 
+14. Controller recibe datos de cliente nuevo 
+15. Verificar que ClienteController.validarDatos() se ejecuta 
+16. Verificar que ClienteService.verificarDuplicados() se ejecuta 
+17. Verificar que ClienteRepository.save() almacena datos 
+18. Consultar cliente en BD 
+Resultado esperado: Cliente almacenado sin duplicados, validaciones exitosas 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+TSPi Weekly Status Report: Form WEEK 
+ 
+Name Adrián Sanchez Team Grupo 1 Instructor Fabián de la Cruz 
+Date 22/12/2025 Cycle No. 1 Week No. 3 
+         
+Weekly Data    Planned  Actual 
+  Project hours for this week    12   9.5 
+  Project hours this cycle to date    31.5  21 
+  Earned value for this week       
+  Earned value this cycle to date       
+  Total hours for the tasks completed this phase to date    
+       
+ 
+Team Member Weekly Data 
+ Hours 
+Planned 
+ Hours 
+Actual 
+ Planned 
+Value 
+ Earned 
+Value 
+Team Leader  2  1.5     
+Development Manager  3  2.5     
+Planning Manager  3  2.5     
+Quality/Process Manager  2  1.5     
+Support Manager   2  1.5     
+Totals  12  9.5     
+         
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+TSPi Issue Tracking Log: Form ITL 
+ 
+Name Adrián Sánchez Date 11/12/2025 
+Team Grupo 1 Instructor F. de la Cruz 
+Part/Level Estrategia Cycle 1 
+ 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  1  Alta  Desarrollo  09/12/2025  Si 
+Description: Mala distribución del trabajo de las Funcionalidades 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  2  Alta  Lider  13/12/2025  Si 
+Description: Miembros del equipo incompleto 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  3  Alta   Planificación  14/12/2025  Si 
+Description: Falta de claridad en la estimación de tiempos (Uso de formularios) 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  4  Alta   Configuración   20/12/2025  Si 
+Description: Falta de claridad en la revisión de los formularios finales 
+ 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  5  Media  Líder  20/12/2025  Si 
+Description: Falta de documentos para organizar la carpeta 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  6  Alta  Desarrollo  20/12/2025  Si 
+Description: Retrasos en el desarrollo de los módulos críticos (Facturación e Inventario). 
+Date  Risk/Issue  Number  Priority  Owner  FU Date  Resolved 
+11/12/2025  Risk  7  Alta  Planificación  20/12/2025  Si 
+Description: Falta de validación temprana de los requisitos funcionales con el usuario final. 
+ 
+11/12/2025  Risk  8  Media  Desarrollo  11/01/2026  No 
+Description: Errores en la integración entre los módulos (Clientes, Productos, Facturas y Bodega). 
+ 
+11/12/2025  Risk  9  Media  Calidad  11/01/2026  No 
+Description: Incumplimiento de los requisitos no funcionales de rendimiento y tiempos de respuesta. 
+ 
