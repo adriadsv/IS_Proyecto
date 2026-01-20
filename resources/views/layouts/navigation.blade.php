@@ -24,12 +24,6 @@
                         </x-nav-link>
                     @endif
 
-                    @if (! auth()->user()?->isAdmin() && Route::has('carrito.index'))
-                        <x-nav-link :href="route('carrito.index')" :active="request()->routeIs('carrito.*')">
-                            {{ __('Carrito') }}
-                        </x-nav-link>
-                    @endif
-
                     @if (auth()->user()?->isAdmin() && Route::has('proveedores.index'))
                         <x-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                             {{ __('Proveedores') }}
@@ -58,6 +52,11 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                @if (! auth()->user()?->isAdmin() && Route::has('carrito.index'))
+                    <x-nav-link class="me-4" :href="route('carrito.index')" :active="request()->routeIs('carrito.*')" aria-label="Carrito">
+                        <span class="text-lg leading-none">🛒</span>
+                    </x-nav-link>
+                @endif
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -115,12 +114,6 @@
                 </x-responsive-nav-link>
             @endif
 
-            @if (! auth()->user()?->isAdmin() && Route::has('carrito.index'))
-                <x-responsive-nav-link :href="route('carrito.index')" :active="request()->routeIs('carrito.*')">
-                    {{ __('Carrito') }}
-                </x-responsive-nav-link>
-            @endif
-
             @if (auth()->user()?->isAdmin() && Route::has('proveedores.index'))
                 <x-responsive-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
                     {{ __('Proveedores') }}
@@ -149,7 +142,14 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                <div class="flex items-center justify-between">
+                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                    @if (! auth()->user()?->isAdmin() && Route::has('carrito.index'))
+                        <a href="{{ route('carrito.index') }}" class="text-gray-500 hover:text-gray-700 text-lg" aria-label="Carrito">
+                            <span class="leading-none">🛒</span>
+                        </a>
+                    @endif
+                </div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 

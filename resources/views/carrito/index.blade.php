@@ -73,7 +73,9 @@
                 <div class="p-4">
                     <div class="flex items-center justify-between gap-4">
                         <div class="text-sm text-gray-900 font-semibold">
-                            Total: {{ number_format((float) $total, 2) }}
+                            <div>Subtotal: {{ number_format((float) $subtotal, 2) }}</div>
+                            <div>IVA 15%: {{ number_format((float) $iva, 2) }}</div>
+                            <div>Total: {{ number_format((float) $total, 2) }}</div>
                         </div>
 
                         <form method="POST" action="{{ route('carrito.pagar') }}">

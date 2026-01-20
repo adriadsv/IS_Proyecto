@@ -48,7 +48,7 @@ class CarritoController extends Controller
         }
 
         $rows = [];
-        $total = 0.0;
+        $subtotal = 0.0;
 
         foreach ($items as $productoId => $cantidad) {
             $producto = $productos->get((int) $productoId);
@@ -57,18 +57,23 @@ class CarritoController extends Controller
             }
 
             $precio = (float) $producto->precio;
-            $subtotal = $precio * (int) $cantidad;
-            $total += $subtotal;
+            $lineSubtotal = $precio * (int) $cantidad;
+            $subtotal += $lineSubtotal;
 
             $rows[] = [
                 'producto' => $producto,
                 'cantidad' => (int) $cantidad,
-                'subtotal' => $subtotal,
+                'subtotal' => $lineSubtotal,
             ];
         }
 
+        $iva = round($subtotal * 0.15, 2);
+        $total = round($subtotal + $iva, 2);
+
         return view('carrito.index', [
             'rows' => $rows,
+            'subtotal' => $subtotal,
+            'iva' => $iva,
             'total' => $total,
         ]);
     }
