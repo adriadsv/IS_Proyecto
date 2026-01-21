@@ -12,8 +12,7 @@ class ProveedorRepository
     public function listActive(): Collection
     {
         return Proveedor::query()
-            ->where('estado', 'activo')
-            ->orderBy('razon_social')
+            ->orderBy('PRV_RAZON_SOCIAL')
             ->get();
     }
 
@@ -24,7 +23,7 @@ class ProveedorRepository
         $this->applyFilters($query, $filters);
 
         return $query
-            ->orderByDesc('id')
+            ->orderByDesc('PRV_ID')
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -37,7 +36,7 @@ class ProveedorRepository
     public function existsByIdentificacion(string $identificacion, ?int $ignoreId = null): bool
     {
         return Proveedor::query()
-            ->where('identificacion', $identificacion)
+            ->where('PRV_RUC', $identificacion)
             ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
             ->exists();
     }
@@ -49,7 +48,7 @@ class ProveedorRepository
         }
 
         return Proveedor::query()
-            ->where('correo', $correo)
+            ->where('PRV_CORREO', $correo)
             ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
             ->exists();
     }
@@ -71,34 +70,23 @@ class ProveedorRepository
     {
         $identificacion = trim((string) ($filters['identificacion'] ?? ''));
         $razonSocial = trim((string) ($filters['razon_social'] ?? ''));
-        $nombreComercial = trim((string) ($filters['nombre_comercial'] ?? ''));
         $q = trim((string) ($filters['q'] ?? ''));
-        $estado = $filters['estado'] ?? 'todos';
 
         if ($identificacion !== '') {
-            $query->where('identificacion', 'like', "%{$identificacion}%");
+            $query->where('PRV_RUC', 'like', "%{$identificacion}%");
         }
 
         if ($razonSocial !== '') {
-            $query->where('razon_social', 'like', "%{$razonSocial}%");
-        }
-
-        if ($nombreComercial !== '') {
-            $query->where('nombre_comercial', 'like', "%{$nombreComercial}%");
+            $query->where('PRV_RAZON_SOCIAL', 'like', "%{$razonSocial}%");
         }
 
         if ($q !== '') {
             $query->where(function (Builder $sub) use ($q) {
                 $sub
-                    ->where('identificacion', 'like', "%{$q}%")
-                    ->orWhere('razon_social', 'like', "%{$q}%")
-                    ->orWhere('nombre_comercial', 'like', "%{$q}%")
-                    ->orWhere('correo', 'like', "%{$q}%");
+                    ->where('PRV_RUC', 'like', "%{$q}%")
+                    ->orWhere('PRV_RAZON_SOCIAL', 'like', "%{$q}%")
+                    ->orWhere('PRV_CORREO', 'like', "%{$q}%");
             });
-        }
-
-        if ($estado === 'activo' || $estado === 'inactivo') {
-            $query->where('estado', $estado);
         }
     }
 }
