@@ -29,10 +29,10 @@
                             @forelse ($rows as $row)
                                 <tr>
                                     <td class="px-4 py-3 text-sm text-gray-900">
-                                        {{ $row['producto']->nombre }}
+                                        {{ $row['producto']->PRD_DESCRIPCION ?? $row['producto']->nombre ?? 'Sin nombre' }}
                                     </td>
                                     <td class="px-4 py-3 text-sm text-gray-900">
-                                        {{ number_format((float) $row['producto']->precio, 2) }}
+                                        {{ number_format((float) ($row['producto']->PRD_PRECIO ?? $row['producto']->precio ?? 0), 2) }}
                                     </td>
                                     <td class="px-4 py-3 text-sm text-gray-900">
                                         {{ $row['cantidad'] }}
@@ -41,7 +41,11 @@
                                         {{ number_format((float) $row['subtotal'], 2) }}
                                     </td>
                                     <td class="px-4 py-3 text-sm text-right whitespace-nowrap space-x-2">
-                                        @if ($row['producto']->stock > $row['cantidad'] && strtolower((string) $row['producto']->estado) === 'activo')
+                                        @php
+                                            $stock = (int) ($row['producto']->stock ?? 0);
+                                            $estado = (string) ($row['producto']->estado ?? 'inactivo');
+                                        @endphp
+                                        @if ($stock > $row['cantidad'] && strtolower($estado) === 'activo')
                                             <form method="POST" action="{{ route('carrito.agregar', $row['producto']) }}" class="inline">
                                                 @csrf
                                                 <input type="hidden" name="cantidad" value="1">

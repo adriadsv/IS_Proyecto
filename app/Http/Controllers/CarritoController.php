@@ -42,9 +42,11 @@ class CarritoController extends Controller
             if (! $p instanceof Producto) {
                 continue;
             }
-            $codigo = trim((string) ($p->codigo ?? ''));
+            // Usar PRD_CODIGO del nuevo esquema, con fallback a 'codigo' por compatibilidad
+            $codigo = trim((string) ($p->PRD_CODIGO ?? $p->codigo ?? ''));
             $b = $codigo !== '' ? ($bodegaIndex[$codigo] ?? null) : null;
             $p->setAttribute('stock', (int) (($b['stock'] ?? 0) ?? 0));
+            $p->setAttribute('estado', (string) ($b['estado'] ?? 'inactivo'));
         }
 
         $rows = [];
@@ -56,7 +58,8 @@ class CarritoController extends Controller
                 continue;
             }
 
-            $precio = (float) $producto->precio;
+            // Usar PRD_PRECIO del nuevo esquema, con fallback a 'precio'
+            $precio = (float) ($producto->PRD_PRECIO ?? $producto->precio ?? 0);
             $lineSubtotal = $precio * (int) $cantidad;
             $subtotal += $lineSubtotal;
 
