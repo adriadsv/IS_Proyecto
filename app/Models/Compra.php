@@ -8,31 +8,45 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Compra extends Model
 {
+    protected $table = 'COMPRAS';
+
+    protected $primaryKey = 'CMP_CODIGO';
+
+    public $timestamps = false;
+
     protected $fillable = [
-        'proveedor_id',
-        'fecha_compra',
-        'numero_comprobante',
-        'tipo_comprobante',
-        'subtotal',
-        'impuesto',
-        'total',
-        'estado',
+        'PRV_ID',
+        'CMP_FECHA_ENTREGA',
+        'CMP_ESTADO',
     ];
 
     protected $casts = [
-        'fecha_compra' => 'date',
-        'subtotal' => 'decimal:2',
-        'impuesto' => 'decimal:2',
-        'total' => 'decimal:2',
+        'CMP_CODIGO' => 'integer',
+        'PRV_ID' => 'integer',
+        'CMP_FECHA_ENTREGA' => 'date',
     ];
 
+    /**
+     * Relación: Una compra pertenece a un proveedor
+     */
     public function proveedor(): BelongsTo
     {
-        return $this->belongsTo(Proveedor::class);
+        return $this->belongsTo(Proveedor::class, 'PRV_ID', 'PRV_ID');
     }
 
+    /**
+     * Relación: Una compra tiene muchos detalles (PROXCMP)
+     */
     public function detalles(): HasMany
     {
-        return $this->hasMany(CompraDetalle::class);
+        return $this->hasMany(Proxcmp::class, 'CMP_CODIGO', 'CMP_CODIGO');
+    }
+
+    /**
+     * Relación: Una compra puede tener muchos registros en kardex
+     */
+    public function kardexes(): HasMany
+    {
+        return $this->hasMany(Kardex::class, 'CMP_CODIGO', 'CMP_CODIGO');
     }
 }
