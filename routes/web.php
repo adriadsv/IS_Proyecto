@@ -8,11 +8,13 @@ use App\Http\Controllers\CompraController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\BodegaProductoController;
 use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\TiendaController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rutas públicas de la tienda (catálogo de ecommerce)
+Route::get('/', [TiendaController::class, 'index'])->name('tienda.index');
+Route::get('/tienda', [TiendaController::class, 'index'])->name('tienda.catalogo');
+Route::get('/producto/{codigo}', [TiendaController::class, 'show'])->name('tienda.producto');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
