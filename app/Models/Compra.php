@@ -8,31 +8,93 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Compra extends Model
 {
+    protected $table = 'COMPRAS';
+
+    protected $primaryKey = 'CMP_CODIGO';
+
+    public $timestamps = false;
+
     protected $fillable = [
-        'proveedor_id',
-        'fecha_compra',
-        'numero_comprobante',
-        'tipo_comprobante',
-        'subtotal',
-        'impuesto',
-        'total',
-        'estado',
+        'PRV_ID',
+        'CMP_FECHA_ENTREGA',
+        'CMP_ESTADO',
     ];
 
-    protected $casts = [
-        'fecha_compra' => 'date',
-        'subtotal' => 'decimal:2',
-        'impuesto' => 'decimal:2',
-        'total' => 'decimal:2',
-    ];
-
-    public function proveedor(): BelongsTo
+    /**
+     * Relación: Una compra tiene muchos detalles (PROXCMP)
+     */
+    public function detallesCompra(): HasMany
     {
-        return $this->belongsTo(Proveedor::class);
+        return $this->hasMany(Proxcmp::class, 'CMP_CODIGO', 'CMP_CODIGO');
     }
 
+    // Accessors for compatibility
+    public function getFechaCompraAttribute()
+    {
+        return $this->CMP_FECHA_ENTREGA;
+    }
+
+    public function getTipoComprobanteAttribute()
+    {
+        return 'Factura'; // Default value as column doesn't exist
+    }
+
+    public function getNumeroComprobanteAttribute()
+    {
+        return str_pad((string) $this->CMP_CODIGO, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function getTotalAttribute()
+    {
+        // Calculate total from details
+        return $this->detallesCompra->sum(function ($detalle) {
+            return $detalle->DET_CMP_CANTIDAD * $detalle->DET_CMP_COSTO_UNITARIO;
+        });
+    }
+
+    protected $casts = [
+        'CMP_CODIGO' => 'integer',
+        'PRV_ID' => 'integer',
+        'CMP_FECHA_ENTREGA' => 'date',
+    ];
+
+    /**
+     * Relación: Una compra pertenece a un proveedor
+     */
+    public function proveedor(): BelongsTo
+    {
+        return $this->belongsTo(Proveedor::class, 'PRV_ID', 'PRV_ID');
+    }
+
+    /**
+     * Relación: Una compra tiene muchos detalles (PROXCMP)
+     */
     public function detalles(): HasMany
     {
-        return $this->hasMany(CompraDetalle::class);
+        return $this->hasMany(Proxcmp::class, 'CMP_CODIGO', 'CMP_CODIGO');
+    }
+
+    /**
+     * Relación: Una compra puede tener muchos registros en kardex
+     */
+    public function kardexes(): HasMany
+    {
+        return $this->hasMany(Kardex::class, 'CMP_CODIGO', 'CMP_CODIGO');
+    }
+
+    // Accessors for compatibility
+    public function getIdAttribute()
+    {
+        return $this->CMP_CODIGO;
+    }
+
+    public function getFechaAttribute()
+    {
+        return $this->CMP_FECHA_ENTREGA;
+    }
+
+    public function getEstadoAttribute()
+    {
+        return $this->CMP_ESTADO;
     }
 }

@@ -12,8 +12,7 @@ class ProductoRepository
     public function listActive(): Collection
     {
         return Producto::query()
-            ->where('estado', 'activo')
-            ->orderBy('nombre')
+            ->orderBy('PRD_DESCRIPCION')
             ->get();
     }
 
@@ -24,29 +23,29 @@ class ProductoRepository
         $this->applyFilters($query, $filters);
 
         return $query
-            ->orderByDesc('id')
+            ->orderBy('PRD_CODIGO')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function findById(int $id): ?Producto
+    public function findById(int|string $id): ?Producto
     {
         return Producto::query()->whereKey($id)->first();
     }
 
-    public function existsByCodigo(string $codigo, ?int $ignoreId = null): bool
+    public function existsByCodigo(string $codigo, int|string|null $ignoreKey = null): bool
     {
         return Producto::query()
-            ->where('codigo', $codigo)
-            ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
+            ->where('PRD_CODIGO', $codigo)
+            ->when($ignoreKey, fn(Builder $q) => $q->where('PRD_CODIGO', '!=', $ignoreKey))
             ->exists();
     }
 
-    public function existsByNombre(string $nombre, ?int $ignoreId = null): bool
+    public function existsByNombre(string $nombre, int|string|null $ignoreKey = null): bool
     {
         return Producto::query()
-            ->where('nombre', $nombre)
-            ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
+            ->where('PRD_DESCRIPCION', $nombre)
+            ->when($ignoreKey, fn(Builder $q) => $q->where('PRD_CODIGO', '!=', $ignoreKey))
             ->exists();
     }
 
@@ -69,31 +68,26 @@ class ProductoRepository
         $nombre = trim((string) ($filters['nombre'] ?? ''));
         $categoria = trim((string) ($filters['categoria'] ?? ''));
         $q = trim((string) ($filters['q'] ?? ''));
-        $estado = $filters['estado'] ?? 'todos';
 
         if ($codigo !== '') {
-            $query->where('codigo', 'like', "%{$codigo}%");
+            $query->where('PRD_CODIGO', 'like', "%{$codigo}%");
         }
 
         if ($nombre !== '') {
-            $query->where('nombre', 'like', "%{$nombre}%");
+            $query->where('PRD_DESCRIPCION', 'like', "%{$nombre}%");
         }
 
         if ($categoria !== '') {
-            $query->where('categoria', 'like', "%{$categoria}%");
+            $query->where('CAT_CODIGO', 'like', "%{$categoria}%");
         }
 
         if ($q !== '') {
             $query->where(function (Builder $sub) use ($q) {
                 $sub
-                    ->where('codigo', 'like', "%{$q}%")
-                    ->orWhere('nombre', 'like', "%{$q}%")
-                    ->orWhere('categoria', 'like', "%{$q}%");
+                    ->where('PRD_CODIGO', 'like', "%{$q}%")
+                    ->orWhere('PRD_DESCRIPCION', 'like', "%{$q}%")
+                    ->orWhere('CAT_CODIGO', 'like', "%{$q}%");
             });
-        }
-
-        if ($estado === 'activo' || $estado === 'inactivo') {
-            $query->where('estado', $estado);
         }
     }
 }

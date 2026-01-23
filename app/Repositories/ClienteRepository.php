@@ -15,7 +15,7 @@ class ClienteRepository
         $this->applyFilters($query, $filters);
 
         return $query
-            ->orderByDesc('id')
+            ->orderByDesc('CLI_ID')
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -28,7 +28,7 @@ class ClienteRepository
     public function existsByIdentificacion(string $identificacion, ?int $ignoreId = null): bool
     {
         return Cliente::query()
-            ->where('identificacion', $identificacion)
+            ->where('CLI_CEDULA_RUC', $identificacion)
             ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
             ->exists();
     }
@@ -40,7 +40,7 @@ class ClienteRepository
         }
 
         return Cliente::query()
-            ->where('correo', $correo)
+            ->where('CLI_CORREO', $correo)
             ->when($ignoreId, fn (Builder $q) => $q->whereKeyNot($ignoreId))
             ->exists();
     }
@@ -64,36 +64,26 @@ class ClienteRepository
         $nombre = trim((string) ($filters['nombre'] ?? ''));
         $correo = trim((string) ($filters['correo'] ?? ''));
         $q = trim((string) ($filters['q'] ?? ''));
-        $estado = $filters['estado'] ?? 'todos';
 
         if ($identificacion !== '') {
-            $query->where('identificacion', 'like', "%{$identificacion}%");
+            $query->where('CLI_CEDULA_RUC', 'like', "%{$identificacion}%");
         }
 
         if ($nombre !== '') {
-            $query->where(function (Builder $sub) use ($nombre) {
-                $sub
-                    ->where('nombres', 'like', "%{$nombre}%")
-                    ->orWhere('apellidos', 'like', "%{$nombre}%");
-            });
+            $query->where('CLI_NOMBRE', 'like', "%{$nombre}%");
         }
 
         if ($correo !== '') {
-            $query->where('correo', 'like', "%{$correo}%");
+            $query->where('CLI_CORREO', 'like', "%{$correo}%");
         }
 
         if ($q !== '') {
             $query->where(function (Builder $sub) use ($q) {
                 $sub
-                    ->where('identificacion', 'like', "%{$q}%")
-                    ->orWhere('nombres', 'like', "%{$q}%")
-                    ->orWhere('apellidos', 'like', "%{$q}%")
-                    ->orWhere('correo', 'like', "%{$q}%");
+                    ->where('CLI_CEDULA_RUC', 'like', "%{$q}%")
+                    ->orWhere('CLI_NOMBRE', 'like', "%{$q}%")
+                    ->orWhere('CLI_CORREO', 'like', "%{$q}%");
             });
-        }
-
-        if ($estado === 'activo' || $estado === 'inactivo') {
-            $query->where('estado', $estado);
         }
     }
 }

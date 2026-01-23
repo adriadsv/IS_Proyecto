@@ -15,8 +15,8 @@ class CompraRepository
         $this->applyFilters($query, $filters);
 
         return $query
-            ->orderByDesc('fecha_compra')
-            ->orderByDesc('id')
+            ->orderByDesc('CMP_FECHA_ENTREGA')
+            ->orderByDesc('CMP_CODIGO')
             ->paginate($perPage)
             ->withQueryString();
     }

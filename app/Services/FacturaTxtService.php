@@ -19,7 +19,17 @@ class FacturaTxtService
 
     public function all(): array
     {
-        return $this->repo->all();
+        // Read from Database
+        return \App\Models\Factura::with('cliente')->get()->map(function ($f) {
+            return [
+                'numero' => $f->FAC_CODIGO,
+                'fecha' => $f->FAC_FECHA ? $f->FAC_FECHA->format('Y-m-d') : '',
+                'cliente' => $f->cliente ? $f->cliente->CLI_NOMBRE : 'Consumidor Final',
+                'total' => (float) $f->FAC_MONTO_TOTAL,
+                'estado' => $f->FAC_ESTADO === 'PAG' ? 'Emitida' : ($f->FAC_ESTADO === 'ANU' ? 'Anulada' : $f->FAC_ESTADO),
+                'metodo_pago' => 'Efectivo', // Default or from new column if exists
+            ];
+        })->toArray();
     }
 
     public function find(int $numero): ?array
@@ -100,7 +110,7 @@ class FacturaTxtService
         // Apply stock decrement
         foreach ($detalle as $item) {
             $res = $this->bodegaService->adjustStock($item['producto_codigo'], -$item['cantidad']);
-            if (! $res['ok']) {
+            if (!$res['ok']) {
                 return ['ok' => false, 'error' => 'invalid', 'message' => 'Producto no disponible/stock insuficiente. Ajusta cantidades o cambia el producto.'];
             }
         }
@@ -137,7 +147,7 @@ class FacturaTxtService
         $oldDetalle = $existing['detalle'] ?? [];
         if (is_array($oldDetalle)) {
             foreach ($oldDetalle as $item) {
-                if (! is_array($item)) {
+                if (!is_array($item)) {
                     continue;
                 }
                 $codigo = (string) ($item['producto_codigo'] ?? '');
@@ -156,7 +166,7 @@ class FacturaTxtService
                 // rollback: re-apply old decrement
                 if (is_array($oldDetalle)) {
                     foreach ($oldDetalle as $it) {
-                        if (! is_array($it)) {
+                        if (!is_array($it)) {
                             continue;
                         }
                         $codigo = (string) ($it['producto_codigo'] ?? '');
@@ -171,7 +181,7 @@ class FacturaTxtService
             if ($item['cantidad'] > (int) ($prodBodega['stock'] ?? 0)) {
                 if (is_array($oldDetalle)) {
                     foreach ($oldDetalle as $it) {
-                        if (! is_array($it)) {
+                        if (!is_array($it)) {
                             continue;
                         }
                         $codigo = (string) ($it['producto_codigo'] ?? '');
@@ -188,7 +198,7 @@ class FacturaTxtService
             if ($precio <= 0) {
                 if (is_array($oldDetalle)) {
                     foreach ($oldDetalle as $it) {
-                        if (! is_array($it)) {
+                        if (!is_array($it)) {
                             continue;
                         }
                         $codigo = (string) ($it['producto_codigo'] ?? '');
@@ -211,7 +221,7 @@ class FacturaTxtService
 
         foreach ($newDetalle as $item) {
             $res = $this->bodegaService->adjustStock($item['producto_codigo'], -$item['cantidad']);
-            if (! $res['ok']) {
+            if (!$res['ok']) {
                 return ['ok' => false, 'error' => 'invalid', 'message' => 'Producto no disponible/stock insuficiente. Ajusta cantidades o cambia el producto.'];
             }
         }
@@ -258,7 +268,7 @@ class FacturaTxtService
         $detalle = $existing['detalle'] ?? [];
         if (is_array($detalle)) {
             foreach ($detalle as $item) {
-                if (! is_array($item)) {
+                if (!is_array($item)) {
                     continue;
                 }
                 $codigo = (string) ($item['producto_codigo'] ?? '');
@@ -317,28 +327,24 @@ class FacturaTxtService
 
     public function listProductosActivos(): array
     {
-        $bodegaIndex = [];
-        foreach ($this->bodegaRepo->all() as $r) {
-            if (! is_array($r)) {
-                continue;
-            }
-            $codigo = (string) ($r['codigo'] ?? '');
-            if ($codigo !== '') {
-                $bodegaIndex[$codigo] = $r;
-            }
-        }
-
         $rows = [];
-        foreach (Producto::query()->where('estado', 'activo')->orderBy('nombre')->get() as $p) {
-            $codigo = (string) ($p->codigo ?? '');
-            $b = $codigo !== '' ? ($bodegaIndex[$codigo] ?? null) : null;
-            $rows[] = [
-                'codigo' => $codigo,
-                'nombre' => (string) ($p->nombre ?? ''),
-                'precio' => (float) ($p->precio ?? 0),
-                'stock' => (int) (($b['stock'] ?? 0) ?? 0),
-                'estado' => 'activo',
-            ];
+        $productos = Producto::query()
+            ->with('bodegas')
+            ->orderBy('PRD_DESCRIPCION')
+            ->get();
+
+        foreach ($productos as $p) {
+            $stock = (int) $p->bodegas->sum('pivot.DET_BOD_CANTIDAD');
+
+            if ($stock > 0) {
+                $rows[] = [
+                    'codigo' => $p->PRD_CODIGO,
+                    'nombre' => $p->PRD_DESCRIPCION,
+                    'precio' => (float) $p->PRD_PRECIO,
+                    'stock' => $stock,
+                    'estado' => 'activo',
+                ];
+            }
         }
 
         return $rows;
@@ -350,7 +356,7 @@ class FacturaTxtService
         $detalle = $factura['detalle'] ?? [];
         if (is_array($detalle)) {
             foreach ($detalle as $item) {
-                if (! is_array($item)) {
+                if (!is_array($item)) {
                     continue;
                 }
                 $codigo = trim((string) ($item['producto_codigo'] ?? ''));
@@ -364,7 +370,7 @@ class FacturaTxtService
 
         $bodegaIndex = [];
         foreach ($this->bodegaRepo->all() as $r) {
-            if (! is_array($r)) {
+            if (!is_array($r)) {
                 continue;
             }
             $codigo = (string) ($r['codigo'] ?? '');
