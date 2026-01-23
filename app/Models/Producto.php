@@ -25,6 +25,7 @@ class Producto extends Model
         'PRD_DESCRIPCION',
         'PRD_PRECIO',
         'PRD_COSTO_ADQUISICION',
+        'PRD_ESTADO',
     ];
 
     protected $casts = [
@@ -105,5 +106,36 @@ class Producto extends Model
     public function kardexes(): HasMany
     {
         return $this->hasMany(Kardex::class, 'PRD_CODIGO', 'PRD_CODIGO');
+    }
+
+    // Accessors for compatibility with View and Service expecting standard specific names
+    public function getCodigoAttribute()
+    {
+        return $this->PRD_CODIGO;
+    }
+
+    public function getNombreAttribute()
+    {
+        return $this->PRD_DESCRIPCION;
+    }
+
+    public function getPrecioAttribute()
+    {
+        return $this->PRD_PRECIO;
+    }
+
+    public function getStockAttribute(): int
+    {
+        return (int) $this->bodegas->sum('pivot.DET_BOD_CANTIDAD');
+    }
+
+    public function getEstadoAttribute(): string
+    {
+        return $this->PRD_ESTADO ?? 'activo';
+    }
+
+    public function setEstadoAttribute($value): void
+    {
+        $this->attributes['PRD_ESTADO'] = $value;
     }
 }

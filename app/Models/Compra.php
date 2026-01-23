@@ -20,6 +20,38 @@ class Compra extends Model
         'CMP_ESTADO',
     ];
 
+    /**
+     * Relación: Una compra tiene muchos detalles (PROXCMP)
+     */
+    public function detallesCompra(): HasMany
+    {
+        return $this->hasMany(Proxcmp::class, 'CMP_CODIGO', 'CMP_CODIGO');
+    }
+
+    // Accessors for compatibility
+    public function getFechaCompraAttribute()
+    {
+        return $this->CMP_FECHA_ENTREGA;
+    }
+
+    public function getTipoComprobanteAttribute()
+    {
+        return 'Factura'; // Default value as column doesn't exist
+    }
+
+    public function getNumeroComprobanteAttribute()
+    {
+        return str_pad((string) $this->CMP_CODIGO, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function getTotalAttribute()
+    {
+        // Calculate total from details
+        return $this->detallesCompra->sum(function ($detalle) {
+            return $detalle->DET_CMP_CANTIDAD * $detalle->DET_CMP_COSTO_UNITARIO;
+        });
+    }
+
     protected $casts = [
         'CMP_CODIGO' => 'integer',
         'PRV_ID' => 'integer',
@@ -48,5 +80,21 @@ class Compra extends Model
     public function kardexes(): HasMany
     {
         return $this->hasMany(Kardex::class, 'CMP_CODIGO', 'CMP_CODIGO');
+    }
+
+    // Accessors for compatibility
+    public function getIdAttribute()
+    {
+        return $this->CMP_CODIGO;
+    }
+
+    public function getFechaAttribute()
+    {
+        return $this->CMP_FECHA_ENTREGA;
+    }
+
+    public function getEstadoAttribute()
+    {
+        return $this->CMP_ESTADO;
     }
 }

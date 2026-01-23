@@ -90,7 +90,7 @@ class BodegaProductoController extends Controller
         }
 
         $result = $this->service->create($validator->validated());
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return back()
                 ->withInput()
                 ->with('error', $result['message']);
@@ -110,9 +110,9 @@ class BodegaProductoController extends Controller
                 ->with('error', 'No se encontró el registro solicitado.');
         }
 
-        $p = Producto::query()->where('codigo', $codigo)->first();
+        $p = Producto::query()->where('PRD_CODIGO', $codigo)->first();
         if ($p !== null) {
-            $producto['precio'] = (float) ($p->precio ?? 0);
+            $producto['precio'] = (float) ($p->PRD_PRECIO ?? 0);
         }
 
         return view('bodega.show', [
@@ -129,9 +129,9 @@ class BodegaProductoController extends Controller
                 ->with('error', 'No se encontró el registro solicitado.');
         }
 
-        $p = Producto::query()->where('codigo', $codigo)->first();
+        $p = Producto::query()->where('PRD_CODIGO', $codigo)->first();
         if ($p !== null) {
-            $producto['precio'] = (float) ($p->precio ?? 0);
+            $producto['precio'] = (float) ($p->PRD_PRECIO ?? 0);
         }
 
         return view('bodega.edit', [
@@ -159,7 +159,7 @@ class BodegaProductoController extends Controller
         }
 
         $result = $this->service->update($codigo, $validator->validated());
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return redirect()
                 ->route('bodega.index')
                 ->with('error', $result['message']);
@@ -187,7 +187,7 @@ class BodegaProductoController extends Controller
     public function destroy(string $codigo): RedirectResponse
     {
         $result = $this->service->inactivate($codigo);
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return redirect()
                 ->route('bodega.index')
                 ->with('error', $result['message']);
@@ -202,7 +202,7 @@ class BodegaProductoController extends Controller
     {
         $codigos = [];
         foreach ($productos as $p) {
-            if (! is_array($p)) {
+            if (!is_array($p)) {
                 continue;
             }
             $c = trim((string) ($p['codigo'] ?? ''));
@@ -212,17 +212,17 @@ class BodegaProductoController extends Controller
         }
 
         $precios = Producto::query()
-            ->whereIn('codigo', array_values(array_unique($codigos)))
-            ->get(['codigo', 'precio'])
-            ->keyBy('codigo');
+            ->whereIn('PRD_CODIGO', array_values(array_unique($codigos)))
+            ->get(['PRD_CODIGO', 'PRD_PRECIO'])
+            ->keyBy('PRD_CODIGO');
 
         foreach ($productos as &$p) {
-            if (! is_array($p)) {
+            if (!is_array($p)) {
                 continue;
             }
             $codigo = trim((string) ($p['codigo'] ?? ''));
             $prod = $codigo !== '' ? $precios->get($codigo) : null;
-            $p['precio'] = $prod === null ? null : (float) ($prod->precio ?? 0);
+            $p['precio'] = $prod === null ? null : (float) ($prod->PRD_PRECIO ?? 0);
         }
         unset($p);
 

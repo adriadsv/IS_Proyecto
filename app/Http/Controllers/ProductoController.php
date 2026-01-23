@@ -66,7 +66,7 @@ class ProductoController extends Controller
     {
         $result = $this->productoService->create($request->validated());
 
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return back()
                 ->withInput()
                 ->with('error', $result['message']);
@@ -80,7 +80,7 @@ class ProductoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): View|RedirectResponse
+    public function show(string $id): View|RedirectResponse
     {
         $producto = $this->productoService->find($id);
 
@@ -98,7 +98,7 @@ class ProductoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id): View|RedirectResponse
+    public function edit(string $id): View|RedirectResponse
     {
         $producto = $this->productoService->find($id);
 
@@ -116,11 +116,11 @@ class ProductoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductoRequest $request, int $id): RedirectResponse
+    public function update(UpdateProductoRequest $request, string $id): RedirectResponse
     {
         $result = $this->productoService->update($id, $request->validated());
 
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return redirect()
                 ->route('productos.index')
                 ->with('error', $result['message']);
@@ -131,7 +131,7 @@ class ProductoController extends Controller
             ->with('success', 'El producto fue actualizado correctamente.');
     }
 
-    public function confirmDelete(int $id): View|RedirectResponse
+    public function confirmDelete(string $id): View|RedirectResponse
     {
         $producto = $this->productoService->find($id);
 
@@ -149,11 +149,11 @@ class ProductoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(string $id): RedirectResponse
     {
         $result = $this->productoService->inactivate($id);
 
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return redirect()
                 ->route('productos.index')
                 ->with('error', $result['message']);

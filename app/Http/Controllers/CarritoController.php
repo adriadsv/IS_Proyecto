@@ -20,16 +20,18 @@ class CarritoController extends Controller
     public function index(): View
     {
         $items = $this->carritoService->items();
-        $ids = array_map('intval', array_keys($items));
+        $ids = array_keys($items);
 
         $productos = Producto::query()
-            ->whereIn('id', $ids)
+            ->whereKey($ids)
             ->get()
-            ->keyBy('id');
+            ->keyBy(function ($item) {
+                return (string) $item->getKey();
+            });
 
         $bodegaIndex = [];
         foreach ($this->bodegaRepo->all() as $r) {
-            if (! is_array($r)) {
+            if (!is_array($r)) {
                 continue;
             }
             $codigo = trim((string) ($r['codigo'] ?? ''));
@@ -39,7 +41,7 @@ class CarritoController extends Controller
         }
 
         foreach ($productos as $p) {
-            if (! $p instanceof Producto) {
+            if (!$p instanceof Producto) {
                 continue;
             }
             // Usar PRD_CODIGO del nuevo esquema, con fallback a 'codigo' por compatibilidad
@@ -53,7 +55,7 @@ class CarritoController extends Controller
         $subtotal = 0.0;
 
         foreach ($items as $productoId => $cantidad) {
-            $producto = $productos->get((int) $productoId);
+            $producto = $productos->get((string) $productoId);
             if ($producto === null) {
                 continue;
             }
@@ -81,26 +83,26 @@ class CarritoController extends Controller
         ]);
     }
 
-    public function agregar(Request $request, int $producto): RedirectResponse
+    public function agregar(Request $request, string $producto): RedirectResponse
     {
         $cantidad = (int) $request->input('cantidad', 1);
         $result = $this->carritoService->agregar($producto, $cantidad);
 
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return back()->with('error', $result['message']);
         }
 
         return redirect()->route('carrito.index');
     }
 
-    public function quitarUno(int $producto): RedirectResponse
+    public function quitarUno(string $producto): RedirectResponse
     {
         $this->carritoService->quitarUno($producto);
 
         return redirect()->route('carrito.index');
     }
 
-    public function quitarProducto(int $producto): RedirectResponse
+    public function quitarProducto(string $producto): RedirectResponse
     {
         $this->carritoService->quitarProducto($producto);
 
@@ -111,7 +113,7 @@ class CarritoController extends Controller
     {
         $result = $this->carritoService->pagar();
 
-        if (! $result['ok']) {
+        if (!$result['ok']) {
             return redirect()->route('carrito.index')->with('error', $result['message']);
         }
 

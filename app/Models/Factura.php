@@ -67,4 +67,40 @@ class Factura extends Model
     {
         return $this->hasMany(Kardex::class, 'FAC_CODIGO', 'FAC_CODIGO');
     }
+
+    // Accessors for compatibility
+    public function getCodigoAttribute()
+    {
+        return $this->FAC_CODIGO;
+    }
+
+    public function getNumeroAttribute() // Often accessed as numero in routes
+    {
+        return $this->FAC_CODIGO;
+    }
+
+    public function getFechaAttribute()
+    {
+        return $this->FAC_FECHA;
+    }
+
+    public function getSubtotalAttribute()
+    {
+        return $this->FAC_SUBTOTAL;
+    }
+
+    public function getIvaAttribute()
+    {
+        return $this->FAC_IVA;
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->FAC_MONTO_TOTAL;
+    }
+
+    public function getEstadoAttribute()
+    {
+        return $this->FAC_ESTADO;
+    }
 }

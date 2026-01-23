@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => 'Administrador',
-                    'password' => '12345',
+                    'password' => \Illuminate\Support\Facades\Hash::make('12345'),
                 ]
             );
         }

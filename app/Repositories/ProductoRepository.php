@@ -37,7 +37,7 @@ class ProductoRepository
     {
         return Producto::query()
             ->where('PRD_CODIGO', $codigo)
-            ->when($ignoreKey, fn (Builder $q) => $q->whereKeyNot($ignoreKey))
+            ->when($ignoreKey, fn(Builder $q) => $q->where('PRD_CODIGO', '!=', $ignoreKey))
             ->exists();
     }
 
@@ -45,7 +45,7 @@ class ProductoRepository
     {
         return Producto::query()
             ->where('PRD_DESCRIPCION', $nombre)
-            ->when($ignoreKey, fn (Builder $q) => $q->whereKeyNot($ignoreKey))
+            ->when($ignoreKey, fn(Builder $q) => $q->where('PRD_CODIGO', '!=', $ignoreKey))
             ->exists();
     }
 

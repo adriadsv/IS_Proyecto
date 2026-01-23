@@ -25,11 +25,11 @@ class CarritoService
     }
 
     /**
-     * @return array<int,int> producto_id => cantidad
+     * @return array<string,int> producto_id => cantidad
      */
     public function items(): array
     {
-        /** @var array<int,int> $items */
+        /** @var array<string,int> $items */
         $items = session()->get(self::SESSION_KEY, []);
 
         return $items;
@@ -40,11 +40,11 @@ class CarritoService
         return array_sum($this->items());
     }
 
-    public function agregar(int $productoId, int $cantidad = 1): array
+    public function agregar(string $productoId, int $cantidad = 1): array
     {
         $cantidad = max(1, $cantidad);
 
-        $producto = Producto::query()->find($productoId);
+        $producto = Producto::query()->with('bodegas')->find($productoId);
         if ($producto === null) {
             return [
                 'ok' => false,
@@ -52,12 +52,9 @@ class CarritoService
             ];
         }
 
-        $codigo = trim((string) ($producto->codigo ?? ''));
-        $bodega = $codigo === '' ? null : $this->bodegaRepo->findByCodigo($codigo);
-        $stock = (int) ($bodega['stock'] ?? 0);
-        $estadoBodega = (string) ($bodega['estado'] ?? '');
+        $stock = (int) $producto->bodegas->sum('pivot.DET_BOD_CANTIDAD');
 
-        if (! $this->isProductoActivo($producto) || $bodega === null || strtolower($estadoBodega) !== 'activo' || $stock <= 0) {
+        if (!$this->isProductoActivo($producto) || $stock <= 0) {
             return [
                 'ok' => false,
                 'message' => 'Revisa los campos marcados. Hay datos inválidos o incompletos.',
@@ -76,7 +73,7 @@ class CarritoService
         ];
     }
 
-    public function quitarUno(int $productoId): void
+    public function quitarUno(string $productoId): void
     {
         $items = $this->items();
         $actual = (int) ($items[$productoId] ?? 0);
@@ -90,7 +87,7 @@ class CarritoService
         session()->put(self::SESSION_KEY, $items);
     }
 
-    public function quitarProducto(int $productoId): void
+    public function quitarProducto(string $productoId): void
     {
         $items = $this->items();
         unset($items[$productoId]);
@@ -123,16 +120,19 @@ class CarritoService
             ];
         }
 
-        $ids = array_map('intval', array_keys($items));
+        $ids = array_keys($items);
 
         $productos = Producto::query()
-            ->whereIn('id', $ids)
+            ->with(['bodegas']) // Load bodegas for stock check
+            ->whereKey($ids)
             ->get()
-            ->keyBy('id');
+            ->keyBy(function ($item) {
+                return (string) $item->getKey();
+            });
 
         // Validar productos y stock
         foreach ($items as $productoId => $cantidad) {
-            $producto = $productos->get((int) $productoId);
+            $producto = $productos->get((string) $productoId); // Explicitly cast key to string
             if ($producto === null) {
                 return [
                     'ok' => false,
@@ -140,12 +140,12 @@ class CarritoService
                 ];
             }
 
-            $codigo = trim((string) ($producto->codigo ?? ''));
-            $bodega = $codigo === '' ? null : $this->bodegaRepo->findByCodigo($codigo);
-            $stock = (int) ($bodega['stock'] ?? 0);
-            $estadoBodega = (string) ($bodega['estado'] ?? '');
+            // Calculate stock from database
+            $stock = (int) $producto->bodegas->sum('pivot.DET_BOD_CANTIDAD');
+            // Assuming 'activo' if stock > 0, or check another flag if needed.
+            // Using logic from TiendaController: implicit check.
 
-            if (! $this->isProductoActivo($producto) || $bodega === null || strtolower($estadoBodega) !== 'activo' || $stock < (int) $cantidad) {
+            if ($stock < (int) $cantidad) {
                 return [
                     'ok' => false,
                     'message' => 'Revisa los campos marcados. Hay datos inválidos o incompletos.',
@@ -156,7 +156,7 @@ class CarritoService
         // Calcular totales
         $subtotal = 0.0;
         foreach ($items as $productoId => $cantidad) {
-            $producto = $productos->get((int) $productoId);
+            $producto = $productos->get((string) $productoId);
             if ($producto === null) {
                 continue;
             }
@@ -183,7 +183,7 @@ class CarritoService
 
             // Crear detalles de factura en PROXFAC
             foreach ($items as $productoId => $cantidad) {
-                $producto = $productos->get((int) $productoId);
+                $producto = $productos->get((string) $productoId);
                 if ($producto === null) {
                     continue;
                 }
@@ -197,33 +197,35 @@ class CarritoService
                 $detalle->save();
             }
 
-            // Descontar stock
-            $applied = [];
+            // Descontar stock (Database Update)
             foreach ($items as $productoId => $cantidad) {
-                $producto = $productos->get((int) $productoId);
+                $producto = $productos->get((string) $productoId);
                 if ($producto === null) {
                     continue;
                 }
-                $codigo = trim((string) ($producto->PRD_CODIGO ?? ''));
-                if ($codigo === '') {
-                    continue;
-                }
 
-                $res = $this->bodegaService->adjustStock($codigo, -((int) $cantidad));
-                if (! $res['ok']) {
-                    // Revertir cambios de stock
-                    foreach ($applied as $c => $q) {
-                        $this->bodegaService->adjustStock((string) $c, (int) $q);
+                // Simple logic: Decrement from first bodega with available stock
+                $qtyToDeduct = (int) $cantidad;
+
+                foreach ($producto->bodegas as $bodega) {
+                    if ($qtyToDeduct <= 0)
+                        break;
+
+                    $currentStock = $bodega->pivot->DET_BOD_CANTIDAD;
+                    $deduct = min($currentStock, $qtyToDeduct);
+
+                    if ($deduct > 0) {
+                        // Update pivot
+                        $producto->bodegas()->updateExistingPivot($bodega->BOD_CODIGO, [
+                            'DET_BOD_CANTIDAD' => $currentStock - $deduct
+                        ]);
+                        $qtyToDeduct -= $deduct;
                     }
-
-                    DB::rollBack();
-                    return [
-                        'ok' => false,
-                        'message' => 'Revisa los campos marcados. Hay datos inválidos o incompletos.',
-                    ];
                 }
 
-                $applied[$codigo] = ($applied[$codigo] ?? 0) + (int) $cantidad;
+                if ($qtyToDeduct > 0) {
+                    throw new \Exception("Stock inconsistency during checkout for " . $producto->PRD_CODIGO);
+                }
             }
 
             DB::commit();

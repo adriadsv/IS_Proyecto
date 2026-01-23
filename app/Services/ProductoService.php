@@ -21,7 +21,7 @@ class ProductoService
         $paginator = $this->productoRepository->paginate($filters, $perPage);
 
         foreach ($paginator->getCollection() as $p) {
-            if (! $p instanceof Producto) {
+            if (!$p instanceof Producto) {
                 continue;
             }
             $this->ensureProductoEnBodega($p, 0);
@@ -35,7 +35,7 @@ class ProductoService
     {
         $productos = $this->productoRepository->listActive();
         foreach ($productos as $p) {
-            if (! $p instanceof Producto) {
+            if (!$p instanceof Producto) {
                 continue;
             }
             $this->ensureProductoEnBodega($p, 0);
@@ -77,7 +77,7 @@ class ProductoService
         ];
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $producto = $this->productoRepository->findById($id);
 
@@ -89,7 +89,7 @@ class ProductoService
             ];
         }
 
-        if ($this->productoRepository->existsByCodigo($data['codigo'], $producto->id)) {
+        if ($this->productoRepository->existsByCodigo($data['codigo'], $producto->PRD_CODIGO)) {
             return [
                 'ok' => false,
                 'error' => 'duplicate',
@@ -98,7 +98,7 @@ class ProductoService
             ];
         }
 
-        if ($this->productoRepository->existsByNombre($data['nombre'], $producto->id)) {
+        if ($this->productoRepository->existsByNombre($data['nombre'], $producto->PRD_CODIGO)) {
             return [
                 'ok' => false,
                 'error' => 'duplicate',
@@ -119,7 +119,7 @@ class ProductoService
         ];
     }
 
-    public function inactivate(int $id): array
+    public function inactivate(string $id): array
     {
         $producto = $this->productoRepository->findById($id);
 
@@ -142,7 +142,7 @@ class ProductoService
         ];
     }
 
-    public function find(int $id): ?Producto
+    public function find(string $id): ?Producto
     {
         $producto = $this->productoRepository->findById($id);
         if ($producto === null) {
@@ -157,45 +157,22 @@ class ProductoService
 
     private function ensureProductoEnBodega(Producto $producto, int $stock): void
     {
-        $codigo = trim((string) ($producto->codigo ?? ''));
-        if ($codigo === '') {
-            return;
-        }
-
-        $existing = $this->bodegaRepo->findByCodigo($codigo);
-        if ($existing !== null) {
-            $existing['nombre'] = (string) ($producto->nombre ?? '');
-            $existing['categoria'] = (string) ($producto->categoria ?? '');
-            $this->bodegaRepo->save($existing);
-
-            return;
-        }
-
-        $row = [
-            'codigo' => $codigo,
-            'nombre' => (string) ($producto->nombre ?? ''),
-            'categoria' => (string) ($producto->categoria ?? ''),
-            'unidad' => '',
-            'stock_inicial' => max(0, $stock),
-            'stock' => max(0, $stock),
-            'stock_minimo' => 0,
-            'precio' => null,
-            'ubicacion' => null,
-            'estado' => 'activo',
-        ];
-
-        $this->bodegaRepo->save($row);
+        // Deprecated: Stock is now managed via Database PROXBOD table.
+        // No-op to prevent writing to legacy text files.
     }
 
     private function attachStockDesdeBodega(Producto $producto): void
     {
-        $codigo = trim((string) ($producto->codigo ?? ''));
-        if ($codigo === '') {
-            return;
+        // Now using the model's Accessor which calculates from PROXBOD table
+        // We explicitly load the relation if not loaded to ensure 'stock' attribute is available if accessed directly
+        if (!$producto->relationLoaded('bodegas')) {
+            $producto->load('bodegas');
         }
 
-        $row = $this->bodegaRepo->findByCodigo($codigo);
-        $producto->setAttribute('stock', (int) ($row['stock'] ?? 0));
+        // This is largely redundant if we use the Accessor, 
+        // but keeps compatibility if something accesses $producto->stock directly as a dynamic property set here.
+        $producto->setAttribute('stock', $producto->stock);
+        $producto->setAttribute('estado', $producto->estado);
     }
 
     private function moveProductoEnBodegaSiCambioCodigo(string $oldCodigo, string $newCodigo): void

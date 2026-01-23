@@ -22,7 +22,7 @@ class TiendaController extends Controller
     {
         $categoriaFiltro = $request->input('categoria');
 
-        $query = Producto::query();
+        $query = Producto::query()->with('bodegas');
 
         if ($categoriaFiltro) {
             $query->where('CAT_CODIGO', $categoriaFiltro);
@@ -30,32 +30,18 @@ class TiendaController extends Controller
 
         $productos = $query->get();
 
-        // Obtener stock de bodega para cada producto
-        $bodegaIndex = [];
-        foreach ($this->bodegaRepo->all() as $r) {
-            if (! is_array($r)) {
-                continue;
-            }
-            $codigo = trim((string) ($r['codigo'] ?? ''));
-            if ($codigo !== '') {
-                $bodegaIndex[$codigo] = $r;
-            }
-        }
-
         foreach ($productos as $p) {
-            if (! $p instanceof Producto) {
-                continue;
-            }
-            // Compatibilidad con ambos esquemas
-            $codigo = trim((string) ($p->PRD_CODIGO ?? $p->codigo ?? ''));
-            $b = $codigo !== '' ? ($bodegaIndex[$codigo] ?? null) : null;
-            $p->setAttribute('stock', (int) (($b['stock'] ?? 0) ?? 0));
-            $p->setAttribute('estado', (string) ($b['estado'] ?? 'inactivo'));
+            // Calcular total de stock de todas las bodegas
+            $totalStock = $p->bodegas->sum('pivot.DET_BOD_CANTIDAD');
+            $p->setAttribute('stock', (int) $totalStock);
+
+            // Estado basado en si tiene stock (o lógica de negocio simple)
+            $p->setAttribute('estado', $totalStock > 0 ? 'activo' : 'inactivo');
         }
 
-        // Filtrar solo productos activos con stock
+        // Filtrar solo productos con stock
         $productosDisponibles = $productos->filter(function ($p) {
-            return strtolower((string) ($p->estado ?? '')) === 'activo' && (int) ($p->stock ?? 0) > 0;
+            return (int) ($p->stock ?? 0) > 0;
         });
 
         $categorias = Categoria::all();
@@ -72,13 +58,12 @@ class TiendaController extends Controller
      */
     public function show(string $codigo): View
     {
-        $producto = Producto::where('PRD_CODIGO', $codigo)->firstOrFail();
+        $producto = Producto::where('PRD_CODIGO', $codigo)->with('bodegas')->firstOrFail();
 
-        // Obtener stock de bodega
-        $codigo = trim((string) ($producto->PRD_CODIGO ?? $producto->codigo ?? ''));
-        $bodega = $codigo === '' ? null : $this->bodegaRepo->findByCodigo($codigo);
-        $producto->setAttribute('stock', (int) ($bodega['stock'] ?? 0));
-        $producto->setAttribute('estado', (string) ($bodega['estado'] ?? 'inactivo'));
+        // Obtener stock de bodega (DB)
+        $totalStock = $producto->bodegas->sum('pivot.DET_BOD_CANTIDAD');
+        $producto->setAttribute('stock', (int) $totalStock);
+        $producto->setAttribute('estado', $totalStock > 0 ? 'activo' : 'inactivo');
 
         // Cargar categoría
         $categoria = $producto->categoria;
